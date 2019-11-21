@@ -123,11 +123,6 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.single())
                 .subscribe(System.out::println,Throwable::printStackTrace);
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         RecyclerAdapter recyclerAdapter = new RecyclerAdapter(getContext(),itemList);
         for(int i=0;i<dataList.size();i++){
 //            itemList.add(new Currency(dataList.get(i).getName(),dataList.get(i).getCode()));
