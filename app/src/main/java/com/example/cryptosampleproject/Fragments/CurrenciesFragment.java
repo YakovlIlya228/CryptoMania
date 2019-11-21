@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.anychart.core.sankey.elements.Flow;
 import com.example.cryptosampleproject.API.CryptoCompare;
 import com.example.cryptosampleproject.API.Cryptonator;
 import com.example.cryptosampleproject.API.CurrencyData;
@@ -36,10 +37,12 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
@@ -88,7 +91,7 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
                 int count = recyclerAdapter.getItemCount();
                 for(int i=0; i<count;i++){
                     String code = ((TextView) recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.codename)).getText().toString().toLowerCase();
-                    String name = ((TextView) recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.name)).getText().toString().toLowerCase();
+                    String name = ((TextView) recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.name)).getText().toString();
                     CurrencyRefresh(code,realCurrency,name,recyclerAdapter,i);
 
                 }
@@ -123,6 +126,12 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.single())
                 .subscribe(System.out::println,Throwable::printStackTrace);
+        try {
+            Thread.sleep(1500);
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
         RecyclerAdapter recyclerAdapter = new RecyclerAdapter(getContext(),itemList);
         for(int i=0;i<dataList.size();i++){
 //            itemList.add(new Currency(dataList.get(i).getName(),dataList.get(i).getCode()));
@@ -134,7 +143,29 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);
-//        recyclerView.setAdapter(recyclerAdapter);
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                Flowable.fromCallable(() -> {
+                    final int pos = viewHolder.getAdapterPosition();
+                    String code = ((TextView) recyclerView.findViewHolderForAdapterPosition(pos).itemView.findViewById(R.id.codename)).getText().toString();
+                    itemList.remove(viewHolder.getAdapterPosition());
+                    getInstance(getContext()).currencyDao().deleteByCode(code);
+                    return "Item was deleted!";
+                })
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(Schedulers.single())
+                        .subscribe(System.out::println,Throwable::printStackTrace);
+                Toast.makeText(getContext(),"Item was deleted!",Toast.LENGTH_LONG).show();
+                RecyclerAdapter newRecyclerAdapter = new RecyclerAdapter(getContext(),itemList);
+                recyclerView.setAdapter(newRecyclerAdapter);
+            }
+        }).attachToRecyclerView(recyclerView);
         return view;
     }
 
@@ -157,7 +188,7 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
                         Toast.makeText(getActivity(),"Got the currency's full name", Toast.LENGTH_LONG).show();
                         CurrencyCall(code,realCurrency,nameList.getRows().get(i).getName(),recyclerAdapter);
                         Flowable.fromCallable(() -> {
-                            getInstance(getContext()).currencyDao().insert(new CurrencyEntity(nameList.getRows().get(pos).getName(),code));
+                            getInstance(getContext()).currencyDao().insert(new CurrencyEntity(nameList.getRows().get(pos).getName(),code.toUpperCase()));
                             return "Data was imported!";
                         })
                                 .subscribeOn(Schedulers.io())
@@ -196,7 +227,7 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
             @Override
             public void onResponse(Call<CurrencyData> call, Response<CurrencyData> response) {
                 currencyData = response.body();
-                itemList.add(new Currency(name, currencyData.getTicker().getBase(),currencyData.getTicker().getPrice().substring(0,currencyData.getTicker().getPrice()
+                itemList.add(new Currency(name, from.toUpperCase(),currencyData.getTicker().getPrice().substring(0,currencyData.getTicker().getPrice()
                         .length()- 4),currencyData.getTicker().getChange().substring(0,currencyData.getTicker().getChange().length()-4)));
                 RecyclerAdapter recyclerAdapter = new RecyclerAdapter(getContext(),itemList);
                 recyclerView.setAdapter(recyclerAdapter);
@@ -216,7 +247,8 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
             @Override
             public void onResponse(Call<CurrencyData> call, Response<CurrencyData> response) {
                 currencyData = response.body();
-                itemList.get(pos).setCodename(currencyData.getTicker().getBase());
+                itemList.get(pos).setName(name);
+                itemList.get(pos).setCodename(from.toUpperCase());
                 itemList.get(pos).setPrice(currencyData.getTicker().getPrice().substring(0,currencyData.getTicker().getPrice()
                         .length()- 4));
                 itemList.get(pos).setChange(currencyData.getTicker().getChange().substring(0,currencyData.getTicker().getChange().length()-4));

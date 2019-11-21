@@ -27,6 +27,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView name, codename, price, change;
         CardView cardView;
+
+        public TextView getCodename() {
+            return codename;
+        }
+
         public ViewHolder(@NonNull View itemView){
             super(itemView);
             cardView = itemView.findViewById(R.id.card);
@@ -41,6 +46,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public RecyclerAdapter(Context context, List<Currency> currencyList){
         data = currencyList;
         this.context = context;
+    }
+
+    public String getCode(@NonNull ViewHolder holder, long pos){
+        return holder.codename.getText().toString();
     }
 
     public RecyclerAdapter(){}
