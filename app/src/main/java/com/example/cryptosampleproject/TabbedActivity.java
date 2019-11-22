@@ -7,6 +7,7 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,6 +44,9 @@ public class TabbedActivity extends AppCompatActivity{
         pagerAdapter.AddFragment(new NewsFragment(),"News");
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
+
+//        Intent intent = new Intent(this, Linechart.class);
+//        startActivity(intent);
 
     }
 

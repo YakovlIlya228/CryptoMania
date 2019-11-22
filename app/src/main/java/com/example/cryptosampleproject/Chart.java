@@ -22,6 +22,7 @@ public class Chart extends Thread {
     private String from;
     private String to;
     private List<Long> time = new ArrayList<>();
+    private List<String> fTimes = new ArrayList<>();
     private List<Long> openData = new ArrayList<>();
 
     private List<Long> closeData = new ArrayList<>();
@@ -68,9 +69,10 @@ public class Chart extends Thread {
             for (int i = 0; i < array.size(); i++) {
                 JsonObject tempObject = array.get(i).getAsJsonObject();
                 long tempTime = tempObject.getAsJsonPrimitive("time").getAsLong() * 1000;
-//                Date date = new Date(tempTime);
-//                DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss");
-//                String formattedTime = formatter.format(date);
+                Date date = new Date(tempTime);
+                DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+                String formattedTime = formatter.format(date);
+                fTimes.add(formattedTime);
                 time.add(tempTime);
                 openData.add(tempObject.getAsJsonPrimitive("open").getAsLong());
                 closeData.add(tempObject.getAsJsonPrimitive("close").getAsLong());
@@ -105,5 +107,17 @@ public class Chart extends Thread {
 
     public List<Long> getLowData() {
         return lowData;
+    }
+
+    public List<String> getfTimes() {
+        return fTimes;
+    }
+
+    public String getFrom() {
+        return from;
+    }
+
+    public String getTo() {
+        return to;
     }
 }
