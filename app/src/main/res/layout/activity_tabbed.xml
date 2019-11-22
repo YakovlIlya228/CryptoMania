@@ -15,13 +15,15 @@
         app:tabMode="fixed"
         android:id="@+id/tabs"
         app:tabGravity="fill"
-        app:tabIndicator="@color/colorAccent"
         app:tabTextColor="@color/white"
+        app:tabIndicatorColor="@color/orange"
         />
     <androidx.viewpager.widget.ViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/pager"
+
     />
+
 
 </LinearLayout>

@@ -22,9 +22,6 @@ public class CurrencyEntity {
         this.code = code;
     }
 
-    public CurrencyEntity() {
-    }
-
     public int getId() {
         return id;
     }

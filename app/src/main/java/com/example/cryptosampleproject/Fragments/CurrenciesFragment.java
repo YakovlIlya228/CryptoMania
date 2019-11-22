@@ -1,6 +1,8 @@
 package com.example.cryptosampleproject.Fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,7 +67,7 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
     private List<CurrencyEntity> dataList;
     private CurrencyData currencyData;
     private CurrencyDatabase database;
-    final private String realCurrency = "usd";
+    private String realCurrency = "usd";
     public static final int REQUEST_CODE = 10;
 
     @Override
@@ -93,7 +96,6 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
                     String code = ((TextView) recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.codename)).getText().toString().toLowerCase();
                     String name = ((TextView) recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.name)).getText().toString();
                     CurrencyRefresh(code,realCurrency,name,recyclerAdapter,i);
-
                 }
                 RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(manager);
@@ -119,6 +121,7 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.currencies_fragment,container,false);
         itemList = new ArrayList<>();
+        Button selectBtn = view.findViewById(R.id.selectBtn);
         Flowable.fromCallable(() -> {
             dataList = database.getInstance(getContext()).currencyDao().getAllCurrencies();
             return "Data was imported!";
@@ -134,15 +137,58 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
         }
         RecyclerAdapter recyclerAdapter = new RecyclerAdapter(getContext(),itemList);
         for(int i=0;i<dataList.size();i++){
-//            itemList.add(new Currency(dataList.get(i).getName(),dataList.get(i).getCode()));
             CurrencyCall(dataList.get(i).getCode(),realCurrency,dataList.get(i).getName(),recyclerAdapter);
         }
-//        CurrencyCall("btc",realCurrency, "Bitcoin",recyclerAdapter);
-//        CurrencyCall("eth",realCurrency, "Ethereum",recyclerAdapter);
-//        CurrencyCall("ltc",realCurrency,"Litecoin",recyclerAdapter);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);
+        selectBtn.setOnClickListener(v -> {
+            AlertDialog.Builder mBuilder = new AlertDialog.Builder(getContext());
+            mBuilder.setTitle("Choose a currency");
+            String[] currenciesList = getResources().getStringArray(R.array.currencies);
+            mBuilder.setSingleChoiceItems(currenciesList, -1, (dialog, which) -> {
+                selectBtn.setText(currenciesList[which]);
+                switch (currenciesList[which]){
+                    case "US Dollar":
+                        realCurrency = "usd";
+                        break;
+                    case "Euro":
+                        realCurrency = "eur";
+                        break;
+                    case "Pound sterling":
+                        realCurrency = "gbp";
+                        break;
+                    case "Russian ruble":
+                        realCurrency = "rub";
+                        break;
+                    case "Japanese yen":
+                        realCurrency = "jpy";
+                        break;
+                    case "Ukrainian hryvnia":
+                        realCurrency = "uah";
+                        break;
+                    case "Australian dollar":
+                        realCurrency = "aud";
+                        break;
+                    case "Canadian dollar":
+                        realCurrency = "cad";
+                        break;
+                }
+                int count = recyclerAdapter.getItemCount();
+                for(int i=0; i<count;i++){
+                    String code = ((TextView) recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.codename)).getText().toString().toLowerCase();
+                    String name = ((TextView) recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.name)).getText().toString();
+                    CurrencyRefresh(code,realCurrency,name,recyclerAdapter,i);
+                }
+                recyclerAdapter.notifyDataSetChanged();
+                dialog.dismiss();
+            });
+            AlertDialog mDialog = mBuilder.create();
+            mDialog.show();
+
+        });
+
+
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -161,7 +207,7 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
                         .subscribeOn(Schedulers.io())
                         .observeOn(Schedulers.single())
                         .subscribe(System.out::println,Throwable::printStackTrace);
-                Toast.makeText(getContext(),"Item was deleted!",Toast.LENGTH_LONG).show();
+//                Toast.makeText(getContext(),"Item was deleted!",Toast.LENGTH_LONG).show();
                 RecyclerAdapter newRecyclerAdapter = new RecyclerAdapter(getContext(),itemList);
                 recyclerView.setAdapter(newRecyclerAdapter);
             }
@@ -185,7 +231,7 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
                 for(int i=0; i<nameList.getRows().size();i++){
                     if(nameList.getRows().get(i).getCode().equals(code.toUpperCase())){
                         int pos = i;
-                        Toast.makeText(getActivity(),"Got the currency's full name", Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getActivity(),"Got the currency's full name", Toast.LENGTH_LONG).show();
                         CurrencyCall(code,realCurrency,nameList.getRows().get(i).getName(),recyclerAdapter);
                         Flowable.fromCallable(() -> {
                             getInstance(getContext()).currencyDao().insert(new CurrencyEntity(nameList.getRows().get(pos).getName(),code.toUpperCase()));
@@ -202,7 +248,7 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
 
             @Override
             public void onFailure(Call<Rows> call, Throwable t) {
-                Toast.makeText(getActivity(),"Couldn't get the currency full name", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(),"Couldn't get the currency full name", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -215,7 +261,7 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
                 applyBaseCurrency(baseCurrency);
             }
             if(resultCode==Activity.RESULT_CANCELED){
-                Toast.makeText(getContext(),"Adding was canceled",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(),"Adding was canceled",Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -231,12 +277,12 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
                         .length()- 4),currencyData.getTicker().getChange().substring(0,currencyData.getTicker().getChange().length()-4)));
                 RecyclerAdapter recyclerAdapter = new RecyclerAdapter(getContext(),itemList);
                 recyclerView.setAdapter(recyclerAdapter);
-                Toast.makeText(getActivity(),"Successfully loaded!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(),"Successfully loaded!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(Call<CurrencyData> call, Throwable t) {
-                Toast.makeText(getActivity(),"Failure", Toast.LENGTH_LONG).show();
+//                Toast.makeText(getActivity(),"Failure", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -253,12 +299,12 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
                         .length()- 4));
                 itemList.get(pos).setChange(currencyData.getTicker().getChange().substring(0,currencyData.getTicker().getChange().length()-4));
                 adapter.notifyDataSetChanged();
-                Toast.makeText(getActivity(),"Data refreshed!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(),"Data refreshed!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(Call<CurrencyData> call, Throwable t) {
-                Toast.makeText(getActivity(),"Failure", Toast.LENGTH_LONG).show();
+//                Toast.makeText(getActivity(),"Failure", Toast.LENGTH_LONG).show();
             }
         });
     }

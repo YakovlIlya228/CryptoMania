@@ -3,4 +3,14 @@
     <string name="refresh">Refresh</string>
     <string name="add">Add</string>
     <string name="add_code_hint">BTC</string>
+    <string-array name="currencies">
+        <item>US Dollar</item>
+        <item>Euro</item>
+        <item>Pound sterling</item>
+        <item>Russian ruble</item>
+        <item>Japanese yen</item>
+        <item>Ukrainian hryvnia</item>
+        <item>Australian dollar</item>
+        <item>Canadian dollar</item>
+    </string-array>
 </resources>

@@ -28,9 +28,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         TextView name, codename, price, change;
         CardView cardView;
 
-        public TextView getCodename() {
-            return codename;
-        }
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
@@ -46,10 +43,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public RecyclerAdapter(Context context, List<Currency> currencyList){
         data = currencyList;
         this.context = context;
-    }
-
-    public String getCode(@NonNull ViewHolder holder, long pos){
-        return holder.codename.getText().toString();
     }
 
     public RecyclerAdapter(){}
@@ -71,8 +64,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         if(holder.change.getText().charAt(0)=='-'){
             holder.change.setBackgroundResource(R.drawable.rounded_corner_red);
         }
+//        if(Integer.parseInt(holder.change.getText().toString())==0){
+//            holder.change.setBackgroundResource(R.drawable.round_corner_neutral);
+//        }
         else{
-            holder.change.setText( '+' + data.get(position).getChange());
+//            holder.change.setText( '+' + data.get(position).getChange());
             holder.change.setBackgroundResource(R.drawable.rounded_corner);
         }
     }
