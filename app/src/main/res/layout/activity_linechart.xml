@@ -1,16 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Linechart">
+    tools:context=".Linechart"
+    android:background="@color/fragmentBack">
 
     <com.github.mikephil.charting.charts.LineChart
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/linechart">
-
+        android:layout_centerHorizontal="true"
+        android:id="@+id/linechart"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="170dp"
+        android:layout_below="@+id/fromTo">
     </com.github.mikephil.charting.charts.LineChart>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="end"
+        android:id="@+id/textCaps"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="30dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Price:"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:layout_marginStart="15dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Median:"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:layout_marginStart="15dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="24 Hour High:"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:layout_marginStart="15dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="24 Hour Low:"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:layout_marginStart="15dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Market Cap:"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:layout_marginStart="15dp"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"
+        android:layout_toEndOf="@id/textCaps">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$ 6,715.34"
+            android:id="@+id/price"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:layout_marginStart="5dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$ 6,691.06"
+            android:id="@+id/median"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:layout_marginStart="5dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$ 7,296.64"
+            android:id="@+id/hour24High"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:layout_marginStart="5dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$ 6,552.20"
+            android:id="@+id/hour24Low"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:layout_marginStart="5dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$ 121.32 B"
+            android:id="@+id/marketCap"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:layout_marginStart="5dp"/>
+
+
+    </LinearLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/fromTo"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/to"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="140dp"
+            android:text="USD"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/from"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/from"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="140dp"
+            android:text="BTC"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/to"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</RelativeLayout>

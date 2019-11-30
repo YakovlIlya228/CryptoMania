@@ -62,6 +62,7 @@ public class Linechart extends AppCompatActivity {
             set1.setValueTextSize(10f);
             set1.setDrawFilled(true);
             set1.setFillColor(getResources().getColor(R.color.orange));
+            set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
 
             ArrayList<ILineDataSet> dataSets = new ArrayList<>();
             dataSets.add(set1);
