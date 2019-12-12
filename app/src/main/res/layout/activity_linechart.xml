@@ -26,7 +26,7 @@
         android:id="@+id/textCaps"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="15dp"
-        android:layout_marginBottom="30dp">
+        android:layout_marginBottom="25dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="25dp"
         android:layout_toEndOf="@id/textCaps">
         <TextView
             android:layout_width="wrap_content"

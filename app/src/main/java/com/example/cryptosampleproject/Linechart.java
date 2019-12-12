@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -32,15 +33,18 @@ public class Linechart extends AppCompatActivity {
         setContentView(R.layout.activity_linechart);
 
         mChart = findViewById(R.id.linechart);
-
+        TextView from = findViewById(R.id.from);
+        TextView to = findViewById(R.id.to);
 //        mChart.setOnChartGestureListener(Linechart.this);
 //        mChart.setOnChartValueSelectedListener(Linechart.this);
 
         mChart.setDragEnabled(true);
         mChart.setScaleEnabled(true);
         mChart.getDescription().setEnabled(false);
-
-        Chart chart = new Chart("BTC", "USD");
+        Bundle codes = getIntent().getExtras();
+        from.setText(codes.getString("codeFrom"));
+        to.setText(codes.getString("codeTo").toUpperCase());
+        Chart chart = new Chart(codes.getString("codeFrom"), codes.getString("codeTo").toUpperCase());
         chart.start();
         try {
             chart.join();
@@ -52,18 +56,19 @@ public class Linechart extends AppCompatActivity {
 
             for (int i = 0; i < dates.size(); i++) {
                 yValues.add(new Entry(i,values.get(i)));
-                Log.d("DATE", arrayDates[i]);
+//                Log.d("DATE", arrayDates[i]);
             }
 
             LineDataSet set1 = new LineDataSet(yValues, "Price of " + chart.getFrom() + " in " + chart.getTo());
+            mChart.setBackgroundColor(getResources().getColor(R.color.fragmentBack));
             set1.setFillAlpha(110);
             set1.setColor(getResources().getColor(R.color.orange));
             set1.setLineWidth(5f);
+            set1.setDrawValues(false);
             set1.setValueTextSize(10f);
             set1.setDrawFilled(true);
             set1.setFillColor(getResources().getColor(R.color.orange));
             set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-
             ArrayList<ILineDataSet> dataSets = new ArrayList<>();
             dataSets.add(set1);
 

@@ -26,14 +26,17 @@ import com.example.cryptosampleproject.API.Row;
 import com.example.cryptosampleproject.API.Rows;
 import com.example.cryptosampleproject.API.Ticker;
 import com.example.cryptosampleproject.Adapters.RecyclerAdapter;
+import com.example.cryptosampleproject.Adapters.RecyclerViewListener;
 import com.example.cryptosampleproject.Currency;
 import com.example.cryptosampleproject.Database.CurrencyDatabase;
 import com.example.cryptosampleproject.Database.CurrencyEntity;
 //import com.example.cryptosampleproject.Database.CurrencyViewModel;
 import com.example.cryptosampleproject.Dialog;
 import com.example.cryptosampleproject.ExchangeInfo;
+import com.example.cryptosampleproject.Linechart;
 import com.example.cryptosampleproject.R;
 import com.example.cryptosampleproject.TabbedActivity;
+import com.github.mikephil.charting.charts.LineChart;
 
 import org.json.JSONArray;
 
@@ -142,6 +145,18 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);
+        recyclerView.addOnItemTouchListener(new RecyclerViewListener(getContext(), recyclerView, new RecyclerViewListener.onItemClickListener(){
+            @Override
+            public void onClick(View view, int position) {
+                String codeFrom = ((TextView)recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.codename)).getText().toString();
+                Bundle bundle = new Bundle();
+                bundle.putString("codeFrom",codeFrom);
+                bundle.putString("codeTo",realCurrency);
+                Intent intent = new Intent(view.getContext(),Linechart.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        }));
         selectBtn.setOnClickListener(v -> {
             AlertDialog.Builder mBuilder = new AlertDialog.Builder(getContext());
             mBuilder.setTitle("Choose a currency");
@@ -266,7 +281,11 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
         }
     }
 
-    public void CurrencyCall(String from, String to , final String name, final RecyclerAdapter adapter){
+    public void CurrencyCall(String from, String to, final String name, final RecyclerAdapter adapter){
+        if(from.toUpperCase().equals(to.toUpperCase())){
+            Toast.makeText(getContext(),"Base and target currency can't be the same one!",Toast.LENGTH_LONG).show();
+            return;
+        }
         Cryptonator apiInterface = NetModule.getApiService();
         Call<CurrencyData> call = apiInterface.getMyJson(from,to);
         call.enqueue(new Callback<CurrencyData>() {
@@ -287,6 +306,10 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
         });
     }
     public void CurrencyRefresh(String from, String to , final String name, final RecyclerAdapter adapter, final int pos){
+        if(from.toUpperCase().equals(to.toUpperCase())){
+            Toast.makeText(getContext(),"Base and target currency can't be the same one!",Toast.LENGTH_LONG).show();
+            return;
+        }
         Cryptonator apiInterface = NetModule.getApiService();
         Call<CurrencyData> call = apiInterface.getMyJson(from,to);
         call.enqueue(new Callback<CurrencyData>() {

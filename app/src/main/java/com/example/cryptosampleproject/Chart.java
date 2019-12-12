@@ -32,7 +32,7 @@ public class Chart extends Thread {
     @Override
     public void run() {
 
-        refresh();
+        refresh(from,to);
     }
 
     Chart(String from, String to) {
@@ -42,9 +42,9 @@ public class Chart extends Thread {
 
     }
 
-    public void refresh() {
+    public void refresh(String from, String to) {
 
-        String url = "https://min-api.cryptocompare.com/data/v2/histohour?fsym=BTC&tsym=USD&limit=24&api_key=" + apiKey;
+        String url = "https://min-api.cryptocompare.com/data/v2/histohour?fsym="+from+"&tsym="+to+"&limit=24&api_key=" + apiKey;
         try {
             URL obj = new URL(url);
             HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
