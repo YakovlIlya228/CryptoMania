@@ -35,6 +35,7 @@ public class Linechart extends AppCompatActivity {
         mChart = findViewById(R.id.linechart);
         TextView from = findViewById(R.id.from);
         TextView to = findViewById(R.id.to);
+        TextView price = findViewById(R.id.price);
 //        mChart.setOnChartGestureListener(Linechart.this);
 //        mChart.setOnChartValueSelectedListener(Linechart.this);
 
@@ -44,6 +45,7 @@ public class Linechart extends AppCompatActivity {
         Bundle codes = getIntent().getExtras();
         from.setText(codes.getString("codeFrom"));
         to.setText(codes.getString("codeTo").toUpperCase());
+        price.setText(codes.getString("price"));
         Chart chart = new Chart(codes.getString("codeFrom"), codes.getString("codeTo").toUpperCase());
         chart.start();
         try {

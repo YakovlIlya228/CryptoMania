@@ -28,6 +28,7 @@ public class Chart extends Thread {
     private List<Long> closeData = new ArrayList<>();
     private List<Long> highData = new ArrayList<>();
     private List<Long> lowData = new ArrayList<>();
+//    private Long median;
 
     @Override
     public void run() {
@@ -78,6 +79,7 @@ public class Chart extends Thread {
                 closeData.add(tempObject.getAsJsonPrimitive("close").getAsLong());
                 highData.add(tempObject.getAsJsonPrimitive("high").getAsLong());
                 lowData.add(tempObject.getAsJsonPrimitive("low").getAsLong());
+//                median = tempObject.getAsJsonObject("median").getAsLong();
 
             }
         }

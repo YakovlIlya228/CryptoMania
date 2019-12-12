@@ -149,9 +149,11 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
             @Override
             public void onClick(View view, int position) {
                 String codeFrom = ((TextView)recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.codename)).getText().toString();
+                String price = ((TextView) recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.price)).getText().toString();
                 Bundle bundle = new Bundle();
                 bundle.putString("codeFrom",codeFrom);
                 bundle.putString("codeTo",realCurrency);
+                bundle.putString("price",price);
                 Intent intent = new Intent(view.getContext(),Linechart.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
@@ -283,7 +285,8 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
 
     public void CurrencyCall(String from, String to, final String name, final RecyclerAdapter adapter){
         if(from.toUpperCase().equals(to.toUpperCase())){
-            Toast.makeText(getContext(),"Base and target currency can't be the same one!",Toast.LENGTH_LONG).show();
+            itemList.add(new Currency(name,from.toUpperCase(),"1.0000","0.0000"));
+            adapter.notifyDataSetChanged();
             return;
         }
         Cryptonator apiInterface = NetModule.getApiService();
@@ -307,7 +310,9 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
     }
     public void CurrencyRefresh(String from, String to , final String name, final RecyclerAdapter adapter, final int pos){
         if(from.toUpperCase().equals(to.toUpperCase())){
-            Toast.makeText(getContext(),"Base and target currency can't be the same one!",Toast.LENGTH_LONG).show();
+            itemList.get(pos).setPrice("1.0000");
+            itemList.get(pos).setChange("0.0000");
+            adapter.notifyDataSetChanged();
             return;
         }
         Cryptonator apiInterface = NetModule.getApiService();
