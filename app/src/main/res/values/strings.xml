@@ -3,6 +3,7 @@
     <string name="refresh">Refresh</string>
     <string name="add">Add</string>
     <string name="add_code_hint">BTC</string>
+    <string name="message">This feature is under development</string>
     <string-array name="currencies">
         <item>US Dollar</item>
         <item>Euro</item>

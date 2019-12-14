@@ -1,6 +1,7 @@
 package com.example.cryptosampleproject.Adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,7 +63,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         holder.price.setText(data.get(position).getPrice());
         holder.change.setText(data.get(position).getChange());
         if(holder.change.getText().charAt(0)=='-'){
-            holder.change.setBackgroundResource(R.drawable.rounded_corner_red);
+            holder.change.setBackgroundResource(R.drawable.rounded_corner);
+            holder.change.setBackgroundColor(Color.parseColor("#ff443a"));
         }
 //        if(Integer.parseInt(holder.change.getText().toString())==0){
 //            holder.change.setBackgroundResource(R.drawable.round_corner_neutral);

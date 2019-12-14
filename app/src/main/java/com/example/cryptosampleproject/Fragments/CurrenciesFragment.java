@@ -248,7 +248,6 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
                 for(int i=0; i<nameList.getRows().size();i++){
                     if(nameList.getRows().get(i).getCode().equals(code.toUpperCase())){
                         int pos = i;
-//                        Toast.makeText(getActivity(),"Got the currency's full name", Toast.LENGTH_LONG).show();
                         CurrencyCall(code,realCurrency,nameList.getRows().get(i).getName(),recyclerAdapter);
                         Flowable.fromCallable(() -> {
                             getInstance(getContext()).currencyDao().insert(new CurrencyEntity(nameList.getRows().get(pos).getName(),code.toUpperCase()));
@@ -299,17 +298,18 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
                         .length()- 4),currencyData.getTicker().getChange().substring(0,currencyData.getTicker().getChange().length()-4)));
                 RecyclerAdapter recyclerAdapter = new RecyclerAdapter(getContext(),itemList);
                 recyclerView.setAdapter(recyclerAdapter);
-//                Toast.makeText(getActivity(),"Successfully loaded!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(Call<CurrencyData> call, Throwable t) {
-//                Toast.makeText(getActivity(),"Failure", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(),"Failure", Toast.LENGTH_LONG).show();
             }
         });
     }
     public void CurrencyRefresh(String from, String to , final String name, final RecyclerAdapter adapter, final int pos){
         if(from.toUpperCase().equals(to.toUpperCase())){
+            itemList.get(pos).setName(name);
+            itemList.get(pos).setCodename(from.toUpperCase());
             itemList.get(pos).setPrice("1.0000");
             itemList.get(pos).setChange("0.0000");
             adapter.notifyDataSetChanged();
@@ -327,12 +327,12 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
                         .length()- 4));
                 itemList.get(pos).setChange(currencyData.getTicker().getChange().substring(0,currencyData.getTicker().getChange().length()-4));
                 adapter.notifyDataSetChanged();
-//                Toast.makeText(getActivity(),"Data refreshed!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),"Data refreshed!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(Call<CurrencyData> call, Throwable t) {
-//                Toast.makeText(getActivity(),"Failure", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(),"Failure", Toast.LENGTH_LONG).show();
             }
         });
     }
