@@ -63,8 +63,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         holder.price.setText(data.get(position).getPrice());
         holder.change.setText(data.get(position).getChange());
         if(holder.change.getText().charAt(0)=='-'){
-            holder.change.setBackgroundResource(R.drawable.rounded_corner);
-            holder.change.setBackgroundColor(Color.parseColor("#ff443a"));
+            holder.change.setBackgroundResource(R.drawable.rounded_corner_red);
         }
 //        if(Integer.parseInt(holder.change.getText().toString())==0){
 //            holder.change.setBackgroundResource(R.drawable.round_corner_neutral);

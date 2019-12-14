@@ -2,6 +2,7 @@ package com.example.cryptosampleproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -62,30 +63,44 @@ public class Linechart extends AppCompatActivity {
             }
 
             LineDataSet set1 = new LineDataSet(yValues, "Price of " + chart.getFrom() + " in " + chart.getTo());
-            mChart.setBackgroundColor(getResources().getColor(R.color.fragmentBack));
-            set1.setFillAlpha(110);
-            set1.setColor(getResources().getColor(R.color.orange));
-            set1.setLineWidth(5f);
+            set1.setFillAlpha(150);
+            set1.setHighlightEnabled(false);
+//            set1.setColor(getResources().getColor(R.color.orange));
+            set1.setLineWidth(1f);
+            set1.setColor(Color.WHITE);
             set1.setDrawValues(false);
             set1.setValueTextSize(10f);
             set1.setDrawFilled(true);
-            set1.setFillColor(getResources().getColor(R.color.orange));
+            if(codes.getChar("change")=='-'){
+                set1.setFillDrawable(getResources().getDrawable(R.drawable.gradient_color_red));
+                set1.setColor(getResources().getColor(R.color.contrastRed));
+            }
+            else{
+                set1.setFillDrawable(getResources().getDrawable(R.drawable.gradient_color_green));
+                set1.setColor(getResources().getColor(R.color.contrastGreen));
+            }
             set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
             ArrayList<ILineDataSet> dataSets = new ArrayList<>();
             dataSets.add(set1);
 
             LineData data = new LineData(dataSets);
 
-
             mChart.setData(data);
-
-
+            mChart.getLegend().setTextColor(Color.WHITE);
             XAxis xAxis = mChart.getXAxis();
+            xAxis.setTextColor(Color.WHITE);
+            xAxis.setAxisLineColor(Color.WHITE);
+            YAxis yAxis = mChart.getAxis(YAxis.AxisDependency.RIGHT);
+            yAxis.setDrawAxisLine(false);
+            yAxis.setDrawLabels(false);
+            yAxis = mChart.getAxis(YAxis.AxisDependency.LEFT);
+            yAxis.setTextColor(Color.WHITE);
+            yAxis.setAxisLineColor(Color.WHITE);
+            yAxis.setTextSize(11f);
             xAxis.setValueFormatter(new MyAxisValueFormatter(arrayDates));
             xAxis.setGranularity(1);
-            xAxis.setTextSize(10f);
-            xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
-
+            xAxis.setTextSize(11f);
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 
 
         }

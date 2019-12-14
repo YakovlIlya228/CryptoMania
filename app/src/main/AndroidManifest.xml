@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/cryptomania_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Linechart"></activity>
+        <activity android:name=".Linechart"
+            android:theme="@style/MainTheme"></activity>
         <activity
             android:name=".SplashActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">

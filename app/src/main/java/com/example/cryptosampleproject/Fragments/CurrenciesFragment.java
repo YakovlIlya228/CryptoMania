@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -150,10 +151,12 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
             public void onClick(View view, int position) {
                 String codeFrom = ((TextView)recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.codename)).getText().toString();
                 String price = ((TextView) recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.price)).getText().toString();
+                char chng = ((TextView) recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.change)).getText().charAt(0);
                 Bundle bundle = new Bundle();
                 bundle.putString("codeFrom",codeFrom);
                 bundle.putString("codeTo",realCurrency);
                 bundle.putString("price",price);
+                bundle.putChar("change",chng);
                 Intent intent = new Intent(view.getContext(),Linechart.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
