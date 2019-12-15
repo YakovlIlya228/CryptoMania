@@ -23,6 +23,9 @@ public interface CurrencyDao {
     @Delete
     void  delete(CurrencyEntity currencyEntity);
 
+    @Query("DELETE FROM currencies WHERE id = :thisId")
+    void deleteById(int thisId);
+
     @Query("DELETE FROM currencies WHERE code = :Code")
     void deleteByCode(String Code);
 

@@ -19,7 +19,7 @@
         android:layout_marginEnd="30dp"
         android:layout_marginStart="30dp"
         android:layout_marginBottom="20dp"
-        android:layout_below="@+id/fromTo"
+        android:layout_below="@+id/dash"
         android:layout_above="@id/textCaps">
     </com.github.mikephil.charting.charts.LineChart>
 
@@ -98,22 +98,14 @@
     </LinearLayout>
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/fromTo"
-        android:layout_marginTop="10dp">
+
 
         <TextView
             android:id="@+id/to"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="120dp"
-            android:layout_marginStart="10dp"
+            style="@style/linechartConvertLine"
+            android:layout_marginStart="30dp"
             android:text="USD"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
+            android:layout_alignStart="@id/dash"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/dash"
@@ -121,14 +113,10 @@
 
         <TextView
             android:id="@+id/from"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="120dp"
-            android:layout_marginEnd="10dp"
+            style="@style/linechartConvertLine"
+            android:layout_marginEnd="30dp"
             android:text="BTC"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
+            android:layout_alignEnd="@id/dash"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/dash"
             app:layout_constraintStart_toStartOf="parent"
@@ -136,18 +124,16 @@
 
         <TextView
             android:id="@+id/dash"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="–"
-            android:textColor="@color/white"
-            android:textSize="28dp"
-            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            style="@style/linechartConvertLine"
+            />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
 

@@ -1,6 +1,7 @@
 package com.example.cryptosampleproject;
 
 public class Currency {
+    private int id;
     private String name;
     private String codename;
     private String price;
@@ -17,6 +18,10 @@ public class Currency {
         this.name = name;
         this.codename = codename;
     }
+
+    public int getId() { return id; }
+
+    public void setId(int id) { this.id = id; }
 
     public String getName() {
         return name;
@@ -42,9 +47,7 @@ public class Currency {
         this.price = price;
     }
 
-    public String getChange() { return change;
-    }
+    public String getChange() { return change; }
 
-    public void setChange(String change) { this.change = change;
-    }
+    public void setChange(String change) { this.change = change; }
 }
