@@ -235,7 +235,7 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
                             getInstance(getContext()).currencyDao().insert(new CurrencyEntity(nameList.getRows().get(pos).getName(),code.toUpperCase()));
                             dataList = getInstance(getContext()).currencyDao().getAllCurrencies();
                             CurrencyCall(code,realCurrency,nameList.getRows().get(pos).getName(),recyclerAdapter,dataList.get(dataList.size()-1).getId());
-                            return "Data was imported!";
+                            return "Item was added!";
                         })
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(Schedulers.single())
