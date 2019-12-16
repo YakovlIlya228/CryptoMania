@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:padding="5dp"
+    android:id="@+id/newsCard">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/fragmentBack"
+        >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This is title"
+        android:textSize="18dp"
+        android:layout_toRightOf="@id/articleImage"
+        android:textColor="@color/white"
+        android:id="@+id/articleTitle"
+        android:layout_marginStart="2dp"
+        android:layuot_marginTop="2dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This is timestamp"
+        android:layout_below="@id/articleSource"
+        android:layout_toRightOf="@id/articleImage"
+        android:textSize="12dp"
+        android:textColor="@color/white"
+        android:id="@+id/articleTimestamp"
+        android:layout_marginStart="2dp"
+        android:layuot_marginTop="2dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This is source"
+        android:textSize="12dp"
+        android:id="@+id/articleSource"
+        android:textColor="@color/white"
+        android:layout_toRightOf="@id/articleImage"
+        android:layout_below="@id/articleTitle"/>
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:id="@+id/articleImage"
+        />
+    </RelativeLayout>
+
+
+</androidx.cardview.widget.CardView>
