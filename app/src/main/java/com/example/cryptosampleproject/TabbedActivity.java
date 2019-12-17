@@ -1,23 +1,16 @@
 package com.example.cryptosampleproject;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
-import androidx.fragment.app.FragmentPagerAdapter;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
+import com.example.cryptosampleproject.API.Currency;
 import com.example.cryptosampleproject.Adapters.PagerAdapter;
-import com.example.cryptosampleproject.Adapters.RecyclerAdapter;
 import com.example.cryptosampleproject.Fragments.CurrenciesFragment;
 import com.example.cryptosampleproject.Fragments.NewsFragment;
 import com.google.android.material.tabs.TabLayout;

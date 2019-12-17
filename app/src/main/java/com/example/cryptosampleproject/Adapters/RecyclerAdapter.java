@@ -1,28 +1,23 @@
 package com.example.cryptosampleproject.Adapters;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.cryptosampleproject.Currency;
+import com.example.cryptosampleproject.API.Currency;
 import com.example.cryptosampleproject.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
-    private List<com.example.cryptosampleproject.Currency> data;
+    private List<Currency> data;
     private Context context;
 
     public class ViewHolder extends RecyclerView.ViewHolder{

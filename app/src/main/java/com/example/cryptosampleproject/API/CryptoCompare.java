@@ -10,4 +10,11 @@ public interface CryptoCompare {
             @Query("fsym") String from,
             @Query("tsyms") String to,
             @Query("api_key") String apiKey);
+
+    @GET("/data/v2/news/?lang=EN")
+    Call<News>getLatestNews(
+            @Query("api_key") String apiKey
+    );
 }
+
+

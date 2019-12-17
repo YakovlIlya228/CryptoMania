@@ -1,4 +1,4 @@
-package com.example.cryptosampleproject;
+package com.example.cryptosampleproject.API;
 
 public class Currency {
     private int id;

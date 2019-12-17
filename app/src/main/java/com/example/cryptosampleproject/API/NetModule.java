@@ -9,20 +9,24 @@ import okhttp3.OkHttpClient;
 public class NetModule {
     private static final String BASE_URL_CryptoCompare = "https://min-api.cryptocompare.com/";
     private static final String BASE_URL_Cryptonator = "https://api.cryptonator.com/";
-    private static Retrofit getRetrofitInstance(){
+    private static Retrofit getRetrofitInstance(String baseUrl){
 //        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
 //        interceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
 //        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 //        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
         return new Retrofit.Builder()
-                .baseUrl(BASE_URL_Cryptonator)
+                .baseUrl(baseUrl)
 //                .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }
 
     public static Cryptonator getApiService(){
-        return getRetrofitInstance().create(Cryptonator.class);
+        return getRetrofitInstance(BASE_URL_Cryptonator).create(Cryptonator.class);
+    }
+
+    public static CryptoCompare getCryptoCompareService(){
+        return getRetrofitInstance(BASE_URL_CryptoCompare).create(CryptoCompare.class);
     }
 
 }
