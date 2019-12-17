@@ -7,7 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.cryptosampleproject.API.Datum;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.cryptosampleproject.R;
 
 import java.util.List;
@@ -16,25 +17,29 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class NewsAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
+public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ArticleViewHolder> {
 
-    private List<Datum> itemList;
+    private List<Article> itemList;
     private Context context;
 
 
-    public class ViewHolder extends RecyclerAdapter.ViewHolder{
+    public class ArticleViewHolder extends RecyclerView.ViewHolder{
 
         TextView title,source,timestamp;
         ImageView imageView;
         CardView cardView;
 
-        public ViewHolder(@NonNull View itemView) {
-            cardView = itemView.findViewById(R.id.newsCard);
+        public ArticleViewHolder(@NonNull View itemView) {
             super(itemView);
+            cardView = itemView.findViewById(R.id.newsCard);
+            title = itemView.findViewById(R.id.articleTitle);
+            source = itemView.findViewById(R.id.articleSource);
+            timestamp = itemView.findViewById(R.id.articleTimestamp);
+            imageView = itemView.findViewById(R.id.articleImage);
         }
     }
 
-    public NewsAdapter(Context context, List<Datum> newsList){
+    public NewsAdapter(Context context, List<Article> newsList){
         itemList = newsList;
         this.context = context;
     }
@@ -42,19 +47,25 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder
 
     @NonNull
     @Override
-    public NewsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public NewsAdapter.ArticleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         view = LayoutInflater.from(context).inflate(R.layout.news_item_layout,parent,false);
-        return new NewsAdapter.ViewHolder(view);
+        return new NewsAdapter.ArticleViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerAdapter.ViewHolder holder, int position) {
-
+    public void onBindViewHolder(@NonNull NewsAdapter.ArticleViewHolder holder, int position) {
+            holder.title.setText(itemList.get(position).getTitle());
+            holder.source.setText(itemList.get(position).getSource());
+            holder.timestamp.setText(itemList.get(position).getTimestamp());
+            Glide.with(context)
+                .load(itemList.get(position).getImageLink())
+                .apply(new RequestOptions().override(70,70))
+                .into(holder.imageView);
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return itemList.size();
     }
 }

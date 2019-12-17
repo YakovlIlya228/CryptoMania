@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.cryptosampleproject.API.Currency;
 import com.example.cryptosampleproject.R;
 
 import java.util.List;

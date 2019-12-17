@@ -9,7 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.example.cryptosampleproject.API.Currency;
+import com.example.cryptosampleproject.Adapters.Currency;
 import com.example.cryptosampleproject.Adapters.PagerAdapter;
 import com.example.cryptosampleproject.Fragments.CurrenciesFragment;
 import com.example.cryptosampleproject.Fragments.NewsFragment;

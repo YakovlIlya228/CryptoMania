@@ -6,7 +6,7 @@ import retrofit2.http.Query;
 
 public interface CryptoCompare {
     @GET("data/price")
-    Call<CurrencyData>getMyJson(
+    Call<Ticker>getMyJson(
             @Query("fsym") String from,
             @Query("tsyms") String to,
             @Query("api_key") String apiKey);

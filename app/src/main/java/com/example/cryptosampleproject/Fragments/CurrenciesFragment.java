@@ -17,9 +17,9 @@ import com.example.cryptosampleproject.API.Cryptonator;
 import com.example.cryptosampleproject.API.CurrencyData;
 import com.example.cryptosampleproject.API.NetModule;
 import com.example.cryptosampleproject.API.Rows;
+import com.example.cryptosampleproject.Adapters.Currency;
 import com.example.cryptosampleproject.Adapters.RecyclerAdapter;
 import com.example.cryptosampleproject.Adapters.RecyclerViewListener;
-import com.example.cryptosampleproject.API.Currency;
 import com.example.cryptosampleproject.Database.CurrencyDatabase;
 import com.example.cryptosampleproject.Database.CurrencyEntity;
 import com.example.cryptosampleproject.Dialog;
@@ -50,7 +50,6 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
     private CurrencyData currencyData;
     private CurrencyDatabase database;
     private String realCurrency = "usd";
-    private static final String BASE_URL_Cryptonator = "https://api.cryptonator.com/";
     public static final int REQUEST_CODE = 10;
 
     @Override
