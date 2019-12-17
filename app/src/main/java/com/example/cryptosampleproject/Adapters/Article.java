@@ -7,6 +7,7 @@ public class Article {
         this.title = title;
         this.source = source;
         this.timestamp = timestamp;
+        this.imageLink = imageLink;
     }
 
     public String getTitle() {

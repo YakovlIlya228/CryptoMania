@@ -32,6 +32,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ArticleViewHol
         public ArticleViewHolder(@NonNull View itemView) {
             super(itemView);
             cardView = itemView.findViewById(R.id.newsCard);
+            cardView.setBackgroundResource(R.drawable.round_card);
             title = itemView.findViewById(R.id.articleTitle);
             source = itemView.findViewById(R.id.articleSource);
             timestamp = itemView.findViewById(R.id.articleTimestamp);
