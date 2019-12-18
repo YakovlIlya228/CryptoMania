@@ -34,6 +34,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
@@ -125,6 +127,23 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(recyclerAdapter);
+
+        SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.pullToRefreshCurrencies);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                int count = recyclerAdapter.getItemCount();
+                for(int i=0; i<count;i++){
+                    String code = ((TextView) recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.codename)).getText().toString().toLowerCase();
+                    String name = ((TextView) recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.name)).getText().toString();
+                    CurrencyRefresh(code,realCurrency,name,recyclerAdapter,i);
+                }
+                RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
+                recyclerView.setLayoutManager(manager);
+                recyclerView.setAdapter(recyclerAdapter);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
         recyclerView.addOnItemTouchListener(new RecyclerViewListener(getContext(), recyclerView, (view1, position) -> {
             String codeFrom = ((TextView)recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.codename)).getText().toString();

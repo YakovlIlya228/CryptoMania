@@ -23,6 +23,8 @@ import java.util.Locale;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -43,6 +45,11 @@ public class NewsFragment extends Fragment {
         RecyclerView.LayoutManager newsManager = new LinearLayoutManager(getContext());
         newsRecycler.setLayoutManager(newsManager);
         newsCall();
+        SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.pullToRefreshNews);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            newsRefresh();
+            swipeRefreshLayout.setRefreshing(false);
+        });
         return view;
     }
 
@@ -69,6 +76,35 @@ public class NewsFragment extends Fragment {
             @Override
             public void onFailure(Call<News> call, Throwable t) {
                 Toast.makeText(getContext(),"Failed to load news",Toast.LENGTH_LONG);
+            }
+        });
+    }
+
+    public void newsRefresh(){
+        CryptoCompare apiInterface = NetModule.getCryptoCompareService();
+        Call<News> call = apiInterface.getLatestNews(apiKey);
+        call.enqueue(new Callback<News>() {
+            @Override
+            public void onResponse(Call<News> call, Response<News> response) {
+                newsList = response.body().getData();
+                for(int i=0; i<newsList.size()-1;i++) {
+                    long timestamp = newsList.get(i).getPublishedOn();
+                    Date date = new java.util.Date(timestamp * 1000L);
+                    SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.US);
+                    sdf.setTimeZone(java.util.TimeZone.getTimeZone("GMT-3"));
+                    String formattedDate = sdf.format(date);
+                    articleList.get(i).setTitle(newsList.get(i).getTitle());
+                    articleList.get(i).setSource(newsList.get(i).getSourceInfo().getName());
+                    articleList.get(i).setTimestamp(formattedDate);
+                    articleList.get(i).setImageLink(newsList.get(i).getImageurl());
+                    NewsAdapter newsAdapter = new NewsAdapter(getContext(),articleList);
+                    newsRecycler.setAdapter(newsAdapter);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<News> call, Throwable t) {
+                Toast.makeText(getContext(),"Failed to refresh news",Toast.LENGTH_SHORT);
             }
         });
     }
