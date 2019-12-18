@@ -65,18 +65,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         List<Long> time = chart.getTime();
-        List<Long> open = chart.getOpenData();
-        List<Long> close = chart.getCloseData();
-        List<Long> high = chart.getHighData();
-        List<Long> low = chart.getLowData();
+        List<Double> open = chart.getOpenData();
+        List<Double> close = chart.getCloseData();
+        List<Double> high = chart.getHighData();
+        List<Double> low = chart.getLowData();
         List<DataEntry> data = new ArrayList<>();
         for (int i = 0; i < low.size(); i++) {
 
             Long timeTemp = time.get(i);
-            Long openTemp = open.get(i);
-            Long closeTemp = close.get(i);
-            Long highTemp = high.get(i);
-            Long lowTemp = low.get(i);
+            Double openTemp = open.get(i);
+            Double closeTemp = close.get(i);
+            Double highTemp = high.get(i);
+            Double lowTemp = low.get(i);
             data.add(new OHCLDataEntry(timeTemp, (double) openTemp, (double) highTemp, (double) lowTemp, (double) closeTemp));
 
         }

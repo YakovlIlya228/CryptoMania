@@ -51,14 +51,53 @@ public class Linechart extends AppCompatActivity {
         chart.start();
         try {
             chart.join();
+
+            String median = chart.getMedian(); //медиана
+            String[] mp = median.split(" ");
+            median = "";
+            for (int i = 1; i < mp.length; i++) {
+                median = median + mp[i] + " ";
+            }
+            median = median.replaceAll(",", "");
+            TextView mdn = findViewById(R.id.median);
+            mdn.setText(median);
+
+            String mktcap = chart.getMktCap(); //капитализация
+            String[] capp = mktcap.split(" ");
+            mktcap = "";
+            for (int i = 1; i < capp.length; i++) {
+                mktcap = mktcap + capp[i] + " ";
+            }
+            TextView cap = findViewById(R.id.marketCap);
+            cap.setText(mktcap);
+
+            List<Double> highs = chart.getHighData(); //максимум
+            Double max = new Double(-10000);
+            for (int i = 0; i < highs.size(); i++) {
+                if (highs.get(i) > max)
+                    max = highs.get(i);
+            }
+            TextView maximum = findViewById(R.id.hour24High);
+            maximum.setText(Double.toString(max));
+
+            List<Double> lows = chart.getLowData(); //минимум
+            Double min = new Double(20000000);
+            for (int i = 0; i < lows.size(); i++) {
+                if (lows.get(i) < min)
+                    min = lows.get(i);
+            }
+            TextView minimum = findViewById(R.id.hour24Low);
+            minimum.setText(Double.toString(min));
+
             List<String> dates = chart.getfTimes();
-            List<Long> values = chart.getOpenData();
+            List<Double> values = chart.getOpenData();
+
             String[] arrayDates = dates.toArray(new String[dates.size()]);
 
             ArrayList<Entry> yValues = new ArrayList<>();
 
             for (int i = 0; i < dates.size(); i++) {
-                yValues.add(new Entry(i,values.get(i)));
+                yValues.add(new Entry(i, values.get(i).floatValue()));
 //                Log.d("DATE", arrayDates[i]);
             }
 

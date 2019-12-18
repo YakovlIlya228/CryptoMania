@@ -1,5 +1,7 @@
 package com.example.cryptosampleproject;
 
+import android.util.Log;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -23,12 +25,13 @@ public class Chart extends Thread {
     private String to;
     private List<Long> time = new ArrayList<>();
     private List<String> fTimes = new ArrayList<>();
-    private List<Long> openData = new ArrayList<>();
-
-    private List<Long> closeData = new ArrayList<>();
-    private List<Long> highData = new ArrayList<>();
-    private List<Long> lowData = new ArrayList<>();
-//    private Long median;
+    private List<Double> openData = new ArrayList<>();
+    private List<Double> closeData = new ArrayList<>();
+    private List<Double> highData = new ArrayList<>();
+    private List<Double> lowData = new ArrayList<>();
+    private String currentPrice;
+    private String median;
+    private String mktCap;
 
     @Override
     public void run() {
@@ -75,11 +78,11 @@ public class Chart extends Thread {
                 String formattedTime = formatter.format(date);
                 fTimes.add(formattedTime);
                 time.add(tempTime);
-                openData.add(tempObject.getAsJsonPrimitive("open").getAsLong());
-                closeData.add(tempObject.getAsJsonPrimitive("close").getAsLong());
-                highData.add(tempObject.getAsJsonPrimitive("high").getAsLong());
-                lowData.add(tempObject.getAsJsonPrimitive("low").getAsLong());
-//                median = tempObject.getAsJsonObject("median").getAsLong();
+                Log.d("OPEN", String.valueOf(tempObject.getAsJsonPrimitive("open").getAsLong()));
+                openData.add(tempObject.getAsJsonPrimitive("open").getAsDouble());
+                closeData.add(tempObject.getAsJsonPrimitive("close").getAsDouble());
+                highData.add(tempObject.getAsJsonPrimitive("high").getAsDouble());
+                lowData.add(tempObject.getAsJsonPrimitive("low").getAsDouble());
 
             }
         }
@@ -88,6 +91,38 @@ public class Chart extends Thread {
             e.printStackTrace();
         }
 
+        try {
+            url = "https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + from + "&tsyms=" + to + "&api_key=" + apiKey;
+            URL obj = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
+            connection.setRequestMethod("GET");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+
+            while ((inputLine = reader.readLine()) != null) {
+
+                response.append(inputLine);
+                System.out.println(inputLine);
+            }
+            reader.close();
+
+            JsonParser parser = new JsonParser();
+            JsonElement element = parser.parse(response.toString());
+            JsonObject object = element.getAsJsonObject();
+            object = object.getAsJsonObject("DISPLAY").getAsJsonObject(from).getAsJsonObject(to);
+            currentPrice = object.getAsJsonPrimitive("PRICE").getAsString();
+            median = object.getAsJsonPrimitive("MEDIAN").getAsString();
+            mktCap = object.getAsJsonPrimitive("MKTCAP").getAsString();
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
 
     }
 
@@ -95,19 +130,19 @@ public class Chart extends Thread {
         return time;
     }
 
-    public List<Long> getOpenData() {
+    public List<Double> getOpenData() {
         return openData ;
     }
 
-    public List<Long> getCloseData() {
+    public List<Double> getCloseData() {
         return closeData;
     }
 
-    public List<Long> getHighData() {
+    public List<Double> getHighData() {
         return highData;
     }
 
-    public List<Long> getLowData() {
+    public List<Double> getLowData() {
         return lowData;
     }
 
@@ -121,5 +156,29 @@ public class Chart extends Thread {
 
     public String getTo() {
         return to;
+    }
+
+    public String getCurrentPrice() {
+        return currentPrice;
+    }
+
+    public void setCurrentPrice(String currentPrice) {
+        this.currentPrice = currentPrice;
+    }
+
+    public String getMedian() {
+        return median;
+    }
+
+    public void setMedian(String median) {
+        this.median = median;
+    }
+
+    public String getMktCap() {
+        return mktCap;
+    }
+
+    public void setMktCap(String mktCap) {
+        this.mktCap = mktCap;
     }
 }
