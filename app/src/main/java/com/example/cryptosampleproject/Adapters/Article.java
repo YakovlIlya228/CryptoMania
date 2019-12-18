@@ -3,11 +3,12 @@ package com.example.cryptosampleproject.Adapters;
 public class Article {
      private String title,source,timestamp, imageLink,url;
 
-    public Article(String title, String source, String timestamp,String imageLink) {
+    public Article(String title, String source, String timestamp,String imageLink, String url) {
         this.title = title;
         this.source = source;
         this.timestamp = timestamp;
         this.imageLink = imageLink;
+        this.url = url;
     }
 
     public String getTitle() {

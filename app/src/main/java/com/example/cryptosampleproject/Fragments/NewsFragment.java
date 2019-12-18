@@ -1,5 +1,7 @@
 package com.example.cryptosampleproject.Fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import com.example.cryptosampleproject.API.NetModule;
 import com.example.cryptosampleproject.API.News;
 import com.example.cryptosampleproject.Adapters.Article;
 import com.example.cryptosampleproject.Adapters.NewsAdapter;
+import com.example.cryptosampleproject.Adapters.RecyclerViewListener;
 import com.example.cryptosampleproject.R;
 
 import java.text.SimpleDateFormat;
@@ -50,6 +53,12 @@ public class NewsFragment extends Fragment {
             newsRefresh();
             swipeRefreshLayout.setRefreshing(false);
         });
+        newsRecycler.addOnItemTouchListener(new RecyclerViewListener(getContext(),newsRecycler,(view1, position) -> {
+            String url = articleList.get(position).getUrl();
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
+            startActivity(browserIntent);
+
+        }));
         return view;
     }
 
@@ -66,7 +75,7 @@ public class NewsFragment extends Fragment {
                     SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.US);
                     sdf.setTimeZone(java.util.TimeZone.getTimeZone("GMT-3"));
                     String formattedDate = sdf.format(date);
-                    articleList.add(new Article(newsList.get(i).getTitle(),newsList.get(i).getSourceInfo().getName(),formattedDate,newsList.get(i).getImageurl()));
+                    articleList.add(new Article(newsList.get(i).getTitle(),newsList.get(i).getSourceInfo().getName(),formattedDate,newsList.get(i).getImageurl(),newsList.get(i).getUrl()));
                     NewsAdapter newsAdapter = new NewsAdapter(getContext(),articleList);
                     newsRecycler.setAdapter(newsAdapter);
                 }
@@ -97,6 +106,7 @@ public class NewsFragment extends Fragment {
                     articleList.get(i).setSource(newsList.get(i).getSourceInfo().getName());
                     articleList.get(i).setTimestamp(formattedDate);
                     articleList.get(i).setImageLink(newsList.get(i).getImageurl());
+                    articleList.get(i).setUrl(newsList.get(i).getUrl());
                     NewsAdapter newsAdapter = new NewsAdapter(getContext(),articleList);
                     newsRecycler.setAdapter(newsAdapter);
                 }
