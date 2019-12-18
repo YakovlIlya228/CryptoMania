@@ -44,6 +44,11 @@ public class Datum {
     @SerializedName("lang")
     @Expose
     private String lang;
+    @SerializedName("source_info")
+    @Expose
+    private SourceInfo sourceInfo;
+
+
 
     public String getId() {
         return id;
@@ -149,5 +154,7 @@ public class Datum {
         this.lang = lang;
     }
 
+    public SourceInfo getSourceInfo() { return sourceInfo; }
 
+    public void setSourceInfo(SourceInfo sourceInfo) { this.sourceInfo = sourceInfo; }
 }

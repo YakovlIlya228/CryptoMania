@@ -59,7 +59,7 @@ public class NewsFragment extends Fragment {
                     SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.US);
                     sdf.setTimeZone(java.util.TimeZone.getTimeZone("GMT-3"));
                     String formattedDate = sdf.format(date);
-                    articleList.add(new Article(newsList.get(i).getTitle(),newsList.get(i).getSource(),formattedDate,newsList.get(i).getImageurl()));
+                    articleList.add(new Article(newsList.get(i).getTitle(),newsList.get(i).getSourceInfo().getName(),formattedDate,newsList.get(i).getImageurl()));
                     NewsAdapter newsAdapter = new NewsAdapter(getContext(),articleList);
                     newsRecycler.setAdapter(newsAdapter);
                 }

@@ -37,6 +37,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ArticleViewHol
             source = itemView.findViewById(R.id.articleSource);
             timestamp = itemView.findViewById(R.id.articleTimestamp);
             imageView = itemView.findViewById(R.id.articleImage);
+            imageView.setClipToOutline(true);
         }
     }
 
@@ -61,7 +62,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ArticleViewHol
             holder.timestamp.setText(itemList.get(position).getTimestamp());
             Glide.with(context)
                 .load(itemList.get(position).getImageLink())
-                .apply(new RequestOptions().override(70,70))
+                .apply(new RequestOptions().override(320,320))
                 .into(holder.imageView);
     }
 
