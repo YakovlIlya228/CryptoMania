@@ -1,10 +1,12 @@
-package com.example.cryptosampleproject;
+package com.example.cryptosampleproject.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+
+import com.example.cryptosampleproject.R;
 
 public class SplashActivity extends AppCompatActivity {
     private static final int SPLASH_TIME_OUT = 700;

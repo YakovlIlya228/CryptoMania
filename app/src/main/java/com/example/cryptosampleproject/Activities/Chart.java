@@ -1,4 +1,4 @@
-package com.example.cryptosampleproject;
+package com.example.cryptosampleproject.Activities;
 
 import android.util.Log;
 

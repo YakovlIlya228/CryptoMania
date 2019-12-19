@@ -4,6 +4,7 @@
     <string name="add">Add</string>
     <string name="add_code_hint">BTC</string>
     <string name="message">This feature is under development</string>
+    <string name="no_connection">There is no Internet connection</string>
     <string-array name="currencies">
         <item>US Dollar</item>
         <item>Euro</item>

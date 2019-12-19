@@ -2,6 +2,7 @@ package com.example.cryptosampleproject.Fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,13 +18,15 @@ import com.example.cryptosampleproject.API.Cryptonator;
 import com.example.cryptosampleproject.API.CurrencyData;
 import com.example.cryptosampleproject.API.NetModule;
 import com.example.cryptosampleproject.API.Rows;
+import com.example.cryptosampleproject.Activities.TabbedActivity;
 import com.example.cryptosampleproject.Adapters.Currency;
 import com.example.cryptosampleproject.Adapters.RecyclerAdapter;
 import com.example.cryptosampleproject.Adapters.RecyclerViewListener;
 import com.example.cryptosampleproject.Database.CurrencyDatabase;
 import com.example.cryptosampleproject.Database.CurrencyEntity;
 import com.example.cryptosampleproject.Dialog;
-import com.example.cryptosampleproject.Linechart;
+import com.example.cryptosampleproject.Activities.Linechart;
+import com.example.cryptosampleproject.NetworkUtility;
 import com.example.cryptosampleproject.R;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,17 +76,26 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.refresh:
-                recyclerView = getActivity().findViewById(R.id.recyclerView);
-                RecyclerAdapter recyclerAdapter = new RecyclerAdapter(getContext(),itemList);
-                int count = recyclerAdapter.getItemCount();
-                for(int i=0; i<count;i++){
-                    String code = ((TextView) recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.codename)).getText().toString().toLowerCase();
-                    String name = ((TextView) recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.name)).getText().toString();
-                    CurrencyRefresh(code,realCurrency,name,recyclerAdapter,i);
+                if(NetworkUtility.isNetworkConnected(getActivity().getApplicationContext())) {
+                    recyclerView = getActivity().findViewById(R.id.recyclerView);
+                    RecyclerAdapter recyclerAdapter = new RecyclerAdapter(getContext(), itemList);
+                    int count = recyclerAdapter.getItemCount();
+                    for (int i = 0; i < count; i++) {
+                        String code = ((TextView) recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.codename)).getText().toString().toLowerCase();
+                        String name = ((TextView) recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.name)).getText().toString();
+                        CurrencyRefresh(code, realCurrency, name, recyclerAdapter, i);
+                    }
+                    RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
+                    recyclerView.setLayoutManager(manager);
+                    recyclerView.setAdapter(recyclerAdapter);
                 }
-                RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
-                recyclerView.setLayoutManager(manager);
-                recyclerView.setAdapter(recyclerAdapter);
+                else {
+                    AlertDialog.Builder noConnection = new AlertDialog.Builder(getActivity());
+                    noConnection.setMessage(R.string.no_connection)
+                            .setNeutralButton("OK", (dialog, which) -> dialog.dismiss());
+                    AlertDialog dialog = noConnection.create();
+                    dialog.show();
+                }
                 break;
             case R.id.add:
                 openDialog();
@@ -106,6 +118,7 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
         View view = inflater.inflate(R.layout.currencies_fragment,container,false);
         itemList = new ArrayList<>();
         Button selectBtn = view.findViewById(R.id.selectBtn);
+        TextView noConnect = view.findViewById(R.id.noConnection);
         Flowable.fromCallable(() -> {
             dataList = database.getInstance(getContext()).currencyDao().getAllCurrencies();
             return "Data was imported!";
@@ -120,8 +133,23 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
             e.printStackTrace();
         }
         RecyclerAdapter recyclerAdapter = new RecyclerAdapter(getContext(),itemList);
-        for(int i=0;i<dataList.size();i++){
-            CurrencyCall(dataList.get(i).getCode(),realCurrency,dataList.get(i).getName(),recyclerAdapter,dataList.get(i).getId());
+        if(NetworkUtility.isNetworkConnected(getActivity().getApplicationContext())){
+            for(int i=0;i<dataList.size();i++){
+                CurrencyCall(dataList.get(i).getCode(),realCurrency,dataList.get(i).getName(),recyclerAdapter,dataList.get(i).getId());
+            }
+        }
+        else{
+//            AlertDialog.Builder noConnection = new AlertDialog.Builder(getActivity());
+//            noConnection.setMessage(R.string.no_connection)
+//                    .setNeutralButton("OK", (dialog, which) -> dialog.dismiss());
+//            AlertDialog dialog = noConnection.create();
+//            dialog.show();
+////            for(int i=0;i<dataList.size();i++){
+////                itemList.add(new Currency(dataList.get(i).getName(), dataList.get(i).getCode(),"—","—"));
+////                itemList.get(itemList.size()-1).setId(dataList.get(i).getId());
+////            }
+            noConnect.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.INVISIBLE);
         }
         recyclerView = view.findViewById(R.id.recyclerView);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
@@ -129,20 +157,17 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
         recyclerView.setAdapter(recyclerAdapter);
 
         SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.pullToRefreshCurrencies);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                int count = recyclerAdapter.getItemCount();
-                for(int i=0; i<count;i++){
-                    String code = ((TextView) recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.codename)).getText().toString().toLowerCase();
-                    String name = ((TextView) recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.name)).getText().toString();
-                    CurrencyRefresh(code,realCurrency,name,recyclerAdapter,i);
-                }
-                RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
-                recyclerView.setLayoutManager(manager);
-                recyclerView.setAdapter(recyclerAdapter);
-                swipeRefreshLayout.setRefreshing(false);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            int count = recyclerAdapter.getItemCount();
+            for(int i=0; i<count;i++){
+                String code = ((TextView) recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.codename)).getText().toString().toLowerCase();
+                String name = ((TextView) recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.name)).getText().toString();
+                CurrencyRefresh(code,realCurrency,name,recyclerAdapter,i);
             }
+            RecyclerView.LayoutManager manager1 = new LinearLayoutManager(getContext());
+            recyclerView.setLayoutManager(manager1);
+            recyclerView.setAdapter(recyclerAdapter);
+            swipeRefreshLayout.setRefreshing(false);
         });
 
         recyclerView.addOnItemTouchListener(new RecyclerViewListener(getContext(), recyclerView, (view1, position) -> {
@@ -283,6 +308,7 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
     public void CurrencyCall(String from, String to, final String name, final RecyclerAdapter adapter,int id){
         if(from.toUpperCase().equals(to.toUpperCase())){
             itemList.add(new Currency(name,from.toUpperCase(),"1.0000","0.0000"));
+            itemList.get(itemList.size()-1).setId(id);
             adapter.notifyDataSetChanged();
             return;
         }

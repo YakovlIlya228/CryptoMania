@@ -57,11 +57,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         if(holder.change.getText().charAt(0)=='-'){
             holder.change.setBackgroundResource(R.drawable.rounded_corner_red);
         }
-//        if(Integer.parseInt(holder.change.getText().toString())==0){
-//            holder.change.setBackgroundResource(R.drawable.round_corner_neutral);
-//        }
+        if(holder.change.getText().toString().equals("—")){
+            holder.change.setBackgroundResource(R.drawable.round_card);
+        }
         else{
-//            holder.change.setText( '+' + data.get(position).getChange());
             holder.change.setBackgroundResource(R.drawable.rounded_corner);
         }
     }

@@ -1,9 +1,12 @@
-package com.example.cryptosampleproject;
+package com.example.cryptosampleproject.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +16,7 @@ import com.example.cryptosampleproject.Adapters.Currency;
 import com.example.cryptosampleproject.Adapters.PagerAdapter;
 import com.example.cryptosampleproject.Fragments.CurrenciesFragment;
 import com.example.cryptosampleproject.Fragments.NewsFragment;
+import com.example.cryptosampleproject.R;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -55,4 +59,6 @@ public class TabbedActivity extends AppCompatActivity{
         return super.onOptionsItemSelected(item);
 
     }
+
+
 }
