@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class Dialog extends AppCompatDialogFragment {
     private EditText baseCurrency;
-    private DialogListener listener;
     public static final int REQUEST_CODE = 10;
 
     @Override
@@ -32,19 +31,11 @@ public class Dialog extends AppCompatDialogFragment {
         baseCurrency.setFilters(new InputFilter[]{ new InputFilter.LengthFilter(5)});
         builder.setView(view)
                 .setTitle("Add new currency")
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, getActivity().getIntent());
-                    }
-                })
-                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String base = baseCurrency.getText().toString().toLowerCase();
-                        if(base.length()!=0){
-                            sendResult(REQUEST_CODE, base);
-                        }
+                .setNegativeButton("Cancel", (dialog, which) -> getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, getActivity().getIntent()))
+                .setPositiveButton("Add", (dialog, which) -> {
+                    String base = baseCurrency.getText().toString().toLowerCase();
+                    if(base.length()!=0){
+                        sendResult(REQUEST_CODE, base);
                     }
                 });
 
@@ -61,15 +52,4 @@ public class Dialog extends AppCompatDialogFragment {
         intent.putExtra("currency_code",value);
         getTargetFragment().onActivityResult(requestCode, Activity.RESULT_OK, intent);
     }
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        try {
-//            listener = (DialogListener) context;
-//        }
-//        catch (Exception e){
-//            throw new ClassCastException(context.toString()+
-//                    "must implement dialog listener!");
-//        }
-//    }
 }

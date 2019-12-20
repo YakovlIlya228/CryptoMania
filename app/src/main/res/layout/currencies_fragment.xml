@@ -17,6 +17,17 @@
             android:layout_centerVertical="true"
             android:visibility="gone"
             />
+            <ImageView
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:src="@drawable/ic_no_connection"
+                android:id="@+id/noConnectionImage"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_above="@id/noConnection"
+                android:visibility="gone"
+                />
+
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/pullToRefreshCurrencies"

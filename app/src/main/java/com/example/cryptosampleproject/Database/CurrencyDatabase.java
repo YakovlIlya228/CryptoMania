@@ -30,24 +30,3 @@ public abstract class CurrencyDatabase extends RoomDatabase {
         return instance;
     }
 }
-//    private static RoomDatabase.Callback roomCallback = new RoomDatabase.Callback() {
-//        @Override
-//        public void onCreate(@NonNull SupportSQLiteDatabase db) {
-//            super.onCreate(db);
-//            new PopulateDbAsyncTask(instance).execute();
-//        }
-//    };
-//    private static class PopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
-//        private CurrencyDao currencyDao;
-//
-//        private PopulateDbAsyncTask(CurrencyDatabase db) {
-//            currencyDao = db.currencyDao();
-//        }
-//
-//        @Override
-//        protected Void doInBackground(Void... voids) {
-//
-//            return null;
-//        }
-//    }
-//}

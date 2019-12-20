@@ -55,14 +55,22 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         holder.price.setText(data.get(position).getPrice());
         holder.change.setText(data.get(position).getChange());
         if(holder.change.getText().charAt(0)=='-'){
+            if(Float.parseFloat(holder.change.getText().toString())==0){
+                holder.change.setText(holder.change.getText().toString().substring(1));
+                holder.change.setBackgroundResource(R.drawable.round_card);
+            }
             holder.change.setBackgroundResource(R.drawable.rounded_corner_red);
         }
         if(holder.change.getText().toString().equals("—")){
             holder.change.setBackgroundResource(R.drawable.round_card);
+            return;
         }
-        else{
-            holder.change.setBackgroundResource(R.drawable.rounded_corner);
+        if(Float.parseFloat(holder.change.getText().toString())==0){
+            holder.change.setBackgroundResource(R.drawable.round_card);
         }
+//        else{
+//            holder.change.setBackgroundResource(R.drawable.rounded_corner);
+//        }
     }
 
     @Override

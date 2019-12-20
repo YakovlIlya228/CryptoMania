@@ -15,6 +15,7 @@ import com.example.cryptosampleproject.API.News;
 import com.example.cryptosampleproject.Adapters.Article;
 import com.example.cryptosampleproject.Adapters.NewsAdapter;
 import com.example.cryptosampleproject.Adapters.RecyclerViewListener;
+import com.example.cryptosampleproject.NetworkUtility;
 import com.example.cryptosampleproject.R;
 
 import java.text.SimpleDateFormat;
@@ -37,7 +38,6 @@ public class NewsFragment extends Fragment {
     List<Article> articleList;
     RecyclerView newsRecycler;
     private final static String apiKey = "fafc9fa6683ceebd2d0764d35c1c6b0366a08156d69828ce2cbfbe7738d38bbd";
-    private static final String BASE_URL_CryptoCompare = "https://min-api.cryptocompare.com/";
 
 
     @Override
@@ -50,14 +50,18 @@ public class NewsFragment extends Fragment {
         newsCall();
         SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.pullToRefreshNews);
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            newsRefresh();
-            swipeRefreshLayout.setRefreshing(false);
+            if(NetworkUtility.isNetworkConnected(getActivity().getApplicationContext())){
+                newsRefresh();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+            else{
+                Toast.makeText(getContext(),"There is no Internet connection",Toast.LENGTH_LONG).show();
+            }
         });
         newsRecycler.addOnItemTouchListener(new RecyclerViewListener(getContext(),newsRecycler,(view1, position) -> {
             String url = articleList.get(position).getUrl();
             Intent browserIntent = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
             startActivity(browserIntent);
-
         }));
         return view;
     }

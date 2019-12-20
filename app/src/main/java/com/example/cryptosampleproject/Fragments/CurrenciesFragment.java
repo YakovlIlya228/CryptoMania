@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.cryptosampleproject.API.Cryptonator;
@@ -55,6 +56,8 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
     private CurrencyData currencyData;
     private CurrencyDatabase database;
     private String realCurrency = "usd";
+    private TextView noConnect;
+    private ImageView noConnectImage;
     public static final int REQUEST_CODE = 10;
 
     @Override
@@ -72,12 +75,34 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+
+    public void setVisible(boolean visible, View view){
+            noConnect = view.findViewById(R.id.noConnection);
+            noConnectImage = view.findViewById(R.id.noConnectionImage);
+            if(visible){
+                noConnect.setVisibility(View.INVISIBLE);
+                noConnectImage.setVisibility(View.INVISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
+            }
+            else{
+                noConnect.setVisibility(View.VISIBLE);
+                noConnectImage.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.INVISIBLE);
+            }
+
+    }
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.refresh:
                 if(NetworkUtility.isNetworkConnected(getActivity().getApplicationContext())) {
-                    recyclerView = getActivity().findViewById(R.id.recyclerView);
+                    noConnect = getActivity().findViewById(R.id.noConnection);
+                    noConnectImage = getActivity().findViewById(R.id.noConnectionImage);
+                    noConnect.setVisibility(View.INVISIBLE);
+                    noConnectImage.setVisibility(View.INVISIBLE);
+                    recyclerView.setVisibility(View.VISIBLE);
                     RecyclerAdapter recyclerAdapter = new RecyclerAdapter(getContext(), itemList);
                     int count = recyclerAdapter.getItemCount();
                     for (int i = 0; i < count; i++) {
@@ -85,8 +110,6 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
                         String name = ((TextView) recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.name)).getText().toString();
                         CurrencyRefresh(code, realCurrency, name, recyclerAdapter, i);
                     }
-                    RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
-                    recyclerView.setLayoutManager(manager);
                     recyclerView.setAdapter(recyclerAdapter);
                 }
                 else {
@@ -98,7 +121,16 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
                 }
                 break;
             case R.id.add:
-                openDialog();
+                if(NetworkUtility.isNetworkConnected(getActivity().getApplicationContext())){
+                    openDialog();
+                }
+                else{
+                    AlertDialog.Builder noConnection = new AlertDialog.Builder(getActivity());
+                    noConnection.setMessage(R.string.no_connection)
+                            .setNeutralButton("OK", (dialog, which) -> dialog.dismiss());
+                    AlertDialog dialog = noConnection.create();
+                    dialog.show();
+                }
                 break;
         }
 
@@ -118,7 +150,8 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
         View view = inflater.inflate(R.layout.currencies_fragment,container,false);
         itemList = new ArrayList<>();
         Button selectBtn = view.findViewById(R.id.selectBtn);
-        TextView noConnect = view.findViewById(R.id.noConnection);
+        noConnect = view.findViewById(R.id.noConnection);
+        noConnectImage = view.findViewById(R.id.noConnectionImage);
         Flowable.fromCallable(() -> {
             dataList = database.getInstance(getContext()).currencyDao().getAllCurrencies();
             return "Data was imported!";
@@ -133,6 +166,7 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
             e.printStackTrace();
         }
         RecyclerAdapter recyclerAdapter = new RecyclerAdapter(getContext(),itemList);
+        recyclerView = view.findViewById(R.id.recyclerView);
         if(NetworkUtility.isNetworkConnected(getActivity().getApplicationContext())){
             for(int i=0;i<dataList.size();i++){
                 CurrencyCall(dataList.get(i).getCode(),realCurrency,dataList.get(i).getName(),recyclerAdapter,dataList.get(i).getId());
@@ -144,29 +178,31 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
 //                    .setNeutralButton("OK", (dialog, which) -> dialog.dismiss());
 //            AlertDialog dialog = noConnection.create();
 //            dialog.show();
-////            for(int i=0;i<dataList.size();i++){
-////                itemList.add(new Currency(dataList.get(i).getName(), dataList.get(i).getCode(),"—","—"));
-////                itemList.get(itemList.size()-1).setId(dataList.get(i).getId());
-////            }
-            noConnect.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.INVISIBLE);
+            for(int i=0;i<dataList.size();i++){
+                itemList.add(new Currency(dataList.get(i).getName(), dataList.get(i).getCode(),"—","—"));
+                itemList.get(itemList.size()-1).setId(dataList.get(i).getId());
+            }
+            setVisible(false,view);
         }
-        recyclerView = view.findViewById(R.id.recyclerView);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(recyclerAdapter);
-
         SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.pullToRefreshCurrencies);
         swipeRefreshLayout.setOnRefreshListener(() -> {
             int count = recyclerAdapter.getItemCount();
-            for(int i=0; i<count;i++){
-                String code = ((TextView) recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.codename)).getText().toString().toLowerCase();
-                String name = ((TextView) recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.name)).getText().toString();
-                CurrencyRefresh(code,realCurrency,name,recyclerAdapter,i);
+            if(NetworkUtility.isNetworkConnected(getActivity().getApplicationContext())){
+                for(int i=0; i<count;i++){
+                    String code = ((TextView) recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.codename)).getText().toString().toLowerCase();
+                    String name = ((TextView) recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.name)).getText().toString();
+                    CurrencyRefresh(code,realCurrency,name,recyclerAdapter,i);
+                }
+                setVisible(true,view);
+                recyclerView.setAdapter(recyclerAdapter);
+
             }
-            RecyclerView.LayoutManager manager1 = new LinearLayoutManager(getContext());
-            recyclerView.setLayoutManager(manager1);
-            recyclerView.setAdapter(recyclerAdapter);
+            else{
+                Toast.makeText(getContext(),"There is no Internet connection",Toast.LENGTH_LONG).show();
+            }
             swipeRefreshLayout.setRefreshing(false);
         });
 
@@ -223,8 +259,6 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
                     String name = ((TextView) recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.name)).getText().toString();
                     CurrencyRefresh(code,realCurrency,name,recyclerAdapterNew,i);
                 }
-                RecyclerView.LayoutManager managerNew = new LinearLayoutManager(getContext());
-                recyclerView.setLayoutManager(managerNew);
                 recyclerView.setAdapter(recyclerAdapterNew);
                 dialog.dismiss();
             });
@@ -309,7 +343,8 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
         if(from.toUpperCase().equals(to.toUpperCase())){
             itemList.add(new Currency(name,from.toUpperCase(),"1.0000","0.0000"));
             itemList.get(itemList.size()-1).setId(id);
-            adapter.notifyDataSetChanged();
+//            RecyclerAdapter recyclerAdapter = new RecyclerAdapter(getContext(),itemList);
+            recyclerView.setAdapter(adapter);
             return;
         }
         Cryptonator apiInterface = NetModule.getApiService();
@@ -321,13 +356,13 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
                 itemList.add(new Currency(name, from.toUpperCase(),currencyData.getTicker().getPrice().substring(0,currencyData.getTicker().getPrice()
                         .length()- 4),currencyData.getTicker().getChange().substring(0,currencyData.getTicker().getChange().length()-4)));
                 itemList.get(itemList.size()-1).setId(id);
-                RecyclerAdapter recyclerAdapter = new RecyclerAdapter(getContext(),itemList);
-                recyclerView.setAdapter(recyclerAdapter);
+//                RecyclerAdapter recyclerAdapter = new RecyclerAdapter(getContext(),itemList);
+                recyclerView.setAdapter(adapter);
             }
 
             @Override
             public void onFailure(Call<CurrencyData> call, Throwable t) {
-                Toast.makeText(getActivity(),"Failure", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(),"Couldn't add the currency", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -335,7 +370,8 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
         if(from.toUpperCase().equals(to.toUpperCase())){
             itemList.get(pos).setPrice("1.0000");
             itemList.get(pos).setChange("0.0000");
-            adapter.notifyItemChanged(pos);
+            RecyclerAdapter recyclerAdapter = new RecyclerAdapter(getContext(),itemList);
+            recyclerView.setAdapter(recyclerAdapter);
             return;
         }
         Cryptonator apiInterface = NetModule.getApiService();
@@ -347,12 +383,13 @@ public class CurrenciesFragment extends Fragment implements Dialog.DialogListene
                 itemList.get(pos).setPrice(currencyData.getTicker().getPrice().substring(0,currencyData.getTicker().getPrice()
                         .length()- 4));
                 itemList.get(pos).setChange(currencyData.getTicker().getChange().substring(0,currencyData.getTicker().getChange().length()-4));
-                adapter.notifyDataSetChanged();
+//                RecyclerAdapter recyclerAdapter = new RecyclerAdapter(getContext(),itemList);
+                recyclerView.setAdapter(adapter);
             }
 
             @Override
             public void onFailure(Call<CurrencyData> call, Throwable t) {
-                Toast.makeText(getActivity(),"Failure", Toast.LENGTH_LONG).show();
+//                Toast.makeText(getActivity(),"Couldn't refresh currency", Toast.LENGTH_LONG).show();
             }
         });
     }
